@@ -1,3 +1,5 @@
+"use strict";
+
 /** Connect Four
  *
  * Player 1 and 2 alternate turns. On each turn, a piece is dropped down a
@@ -6,7 +8,7 @@
  */
 
 class Game {
-  constructor(height, width) {
+  constructor(height = 6, width = 7) {
     this.width = width;
     this.height = height;
     this.currPlayer = 1;
@@ -110,7 +112,7 @@ class Game {
 
   /** checkForWin: check board cell-by-cell for "does a win start here?" */
   checkForWin() {
-    function _win(cells) {
+    const _win = (cells) => {
       // Check four cells to see if they're all color of current player
       //  - cells: list of four (y, x) cells
       //  - returns true if all are legal coordinates & all match currPlayer
@@ -123,7 +125,7 @@ class Game {
           x < this.width &&
           this.board[y][x] === this.currPlayer
       );
-    }
+    };
 
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
