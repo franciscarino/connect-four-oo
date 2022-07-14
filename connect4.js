@@ -6,28 +6,33 @@
  */
 
 class Game {
-  constructor() {
-    this.width = 7;
-    this.height = 6;
+  constructor(height, width) {
+    this.width = width;
+    this.height = height;
     this.currPlayer = 1;
     this.board = [];
 
     this.makeBoard();
     this.makeHtmlBoard();
   }
+
+  /** makeBoard: create in-JS board structure:
+ *   board = array of rows, each row is array of cells  (board[y][x])
+ */
   makeBoard() {
     for (let y = 0; y < this.height; y++) {
       this.board.push(Array.from({ length: this.width }));
     }
   }
 
+  /** makeHtmlBoard: make HTML table and row of column tops. */
   makeHtmlBoard() {
     const board = document.getElementById("board");
 
     // make column tops (clickable area for adding a piece to that column)
     const top = document.createElement("tr");
     top.setAttribute("id", "column-top");
-    top.addEventListener("click", this.handleClick);
+    top.addEventListener("click", this.handleClick.bind(this));
 
     for (let x = 0; x < this.width; x++) {
       const headCell = document.createElement("td");
@@ -50,7 +55,7 @@ class Game {
       board.append(row);
     }
   }
-
+  /** findSpotForCol: given column x, return top empty y (null if filled) */
   findSpotForCol(x) {
     for (let y = this.height - 1; y >= 0; y--) {
       if (!this.board[y][x]) {
@@ -60,20 +65,21 @@ class Game {
     return null;
   }
 
+  /** placeInTable: update DOM to place piece into HTML table of board */
   placeInTable(y, x) {
     const piece = document.createElement("div");
     piece.classList.add("piece");
-    piece.classList.add(`p${currPlayer}`);
+    piece.classList.add(`p${this.currPlayer}`);
     piece.style.top = -50 * (y + 2);
 
     const spot = document.getElementById(`${y}-${x}`);
     spot.append(piece);
   }
-
+  /** endGame: announce game end */
   endGame(msg) {
     alert(msg);
   }
-
+  /** handleClick: handle click of column top to play piece */
   handleClick(evt) {
     // get x from ID of clicked cell
     const x = +evt.target.id;
@@ -102,6 +108,7 @@ class Game {
     this.currPlayer = this.currPlayer === 1 ? 2 : 1;
   }
 
+  /** checkForWin: check board cell-by-cell for "does a win start here?" */
   checkForWin() {
     function _win(cells) {
       // Check four cells to see if they're all color of current player
@@ -155,6 +162,15 @@ class Game {
     }
   }
 }
+
+new Game(6, 7);
+
+
+
+
+
+
+
 
 // moved to game constructor
 // const WIDTH = 7;
@@ -321,4 +337,4 @@ class Game {
 // makeBoard();
 // makeHtmlBoard();
 
-const game = new Game();
+
