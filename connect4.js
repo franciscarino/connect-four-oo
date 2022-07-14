@@ -13,6 +13,7 @@ class Game {
     this.height = height;
     this.currPlayer = 1;
     this.board = [];
+    this.gameOver = false;
 
     this.createStartButton();
   }
@@ -20,39 +21,36 @@ class Game {
   /** clearBoard*/
   clearBoard() {
     this.board = [];
-
   }
-
 
   /** clearHtmlBoard*/
   clearHtmlBoard() {
     // get all children of id board
-    const boardRows = document.querySelectorAll('tr');
+    const boardRows = document.querySelectorAll("tr");
     for (let row of boardRows) {
       row.remove();
     }
-
   }
   /** add event listener to start button */
 
   createStartButton() {
-    const startButton = document.getElementById('start');
-    startButton.addEventListener('click', this.handleStartClick.bind(this));
+    const startButton = document.getElementById("start");
+    startButton.addEventListener("click", this.handleStartClick.bind(this));
   }
 
   /** handleStart: handle click of Game */
   handleStartClick() {
     //  reset everything
+    this.gameOver = false;
     this.clearBoard();
     this.clearHtmlBoard();
     this.makeBoard();
     this.makeHtmlBoard();
-    console.log(this.board);
   }
 
   /** makeBoard: create in-JS board structure:
- *   board = array of rows, each row is array of cells  (board[y][x])
- */
+   *   board = array of rows, each row is array of cells  (board[y][x])
+   */
   makeBoard() {
     for (let y = 0; y < this.height; y++) {
       this.board.push(Array.from({ length: this.width }));
@@ -115,6 +113,9 @@ class Game {
   }
   /** handleClick: handle click of column top to play piece */
   handleClick(evt) {
+    if (this.gameOver) {
+      return;
+    }
     // get x from ID of clicked cell
     const x = +evt.target.id;
 
@@ -130,11 +131,13 @@ class Game {
 
     // check for win
     if (this.checkForWin()) {
+      this.gameOver = true;
       return this.endGame(`Player ${this.currPlayer} won!`);
     }
 
     // check for tie
     if (this.board.every((row) => row.every((cell) => cell))) {
+      this.gameOver = true;
       return this.endGame("Tie!");
     }
 
@@ -198,13 +201,6 @@ class Game {
 }
 
 new Game(6, 7);
-
-
-
-
-
-
-
 
 // moved to game constructor
 // const WIDTH = 7;
@@ -370,5 +366,3 @@ new Game(6, 7);
 
 // makeBoard();
 // makeHtmlBoard();
-
-
