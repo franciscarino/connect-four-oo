@@ -14,8 +14,40 @@ class Game {
     this.currPlayer = 1;
     this.board = [];
 
+    this.createStartButton();
+  }
+
+  /** clearBoard*/
+  clearBoard() {
+    this.board = [];
+
+  }
+
+
+  /** clearHtmlBoard*/
+  clearHtmlBoard() {
+    // get all children of id board
+    const boardRows = document.querySelectorAll('tr');
+    for (let row of boardRows) {
+      row.remove();
+    }
+
+  }
+  /** add event listener to start button */
+
+  createStartButton() {
+    const startButton = document.getElementById('start');
+    startButton.addEventListener('click', this.handleStartClick.bind(this));
+  }
+
+  /** handleStart: handle click of Game */
+  handleStartClick() {
+    //  reset everything
+    this.clearBoard();
+    this.clearHtmlBoard();
     this.makeBoard();
     this.makeHtmlBoard();
+    console.log(this.board);
   }
 
   /** makeBoard: create in-JS board structure:
