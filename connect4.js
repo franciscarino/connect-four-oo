@@ -19,8 +19,10 @@ class Game {
     this.currPlayer = 1;
     this.board = [];
     this.gameOver = false;
-    this.players = [p1, p2];
-    this.createStartButton();
+    this.p1 = p1;
+    this.p2 = p2;
+    this.players = [this.p1.playerColor, this.p2.playerColor];
+
   }
 
   /** clearBoard*/
@@ -36,22 +38,7 @@ class Game {
       row.remove();
     }
   }
-  /** add event listener to start button */
 
-  createStartButton() {
-    const startButton = document.getElementById("start");
-    startButton.addEventListener("click", this.handleStartClick.bind(this));
-  }
-
-  /** handleStart: handle click of Game */
-  handleStartClick() {
-    //  reset everything
-    this.gameOver = false;
-    this.clearBoard();
-    this.clearHtmlBoard();
-    this.makeBoard();
-    this.makeHtmlBoard();
-  }
 
   /** makeBoard: create in-JS board structure:
    *   board = array of rows, each row is array of cells  (board[y][x])
@@ -104,9 +91,13 @@ class Game {
 
   /** placeInTable: update DOM to place piece into HTML table of board */
   placeInTable(y, x) {
+    console.log(this.players);
     const piece = document.createElement("div");
     piece.classList.add("piece");
-    piece.classList.add(`p${this.currPlayer}`);
+    // piece.classList.add(`p${this.currPlayer}`);
+    piece.style.backgroundColor = this.players[this.currPlayer - 1];
+
+
     piece.style.top = -50 * (y + 2);
 
     const spot = document.getElementById(`${y}-${x}`);
@@ -205,4 +196,28 @@ class Game {
   }
 }
 
-new Game(6, 7);
+
+/** Get c=start button from document */
+
+const startButton = document.getElementById("start");
+
+/**add event listener to start button */
+startButton.addEventListener("click", handleStartClick);
+
+/** handle start click, get the color strings, instantiate players and game board */
+function handleStartClick() {
+  let p1ColorString = document.getElementById('p1-color');
+  let p2ColorString = document.getElementById('p2-color');
+
+  const game = new Game(new Player(p1ColorString.value), new Player(p2ColorString.value), 6, 7);
+  game.gameOver = false;
+
+  game.clearBoard();
+  game.clearHtmlBoard();
+  game.makeBoard();
+  game.makeHtmlBoard();
+  p1ColorString.value = '';
+  p2ColorString.value = '';
+}
+
+
